@@ -1,13 +1,16 @@
 //load meals data from dummy backend
 
+import { useState } from "react";
 import useHttp from "../hooks/useHttp";
 import Error from "./Error.jsx";
 import MealItem from "./MeaItem";
 
 const requestConfig = {};
 
-export default function Meals(){
+export default function Meals({selectedCategory}){
     const{data:loadedMeals, isLoading,error}= useHttp('http://localhost:3000/meals',requestConfig, []);
+
+    // const [selectedCategory, setSelectedCategory] = useState('');
     //if we want tot update only when changes occur we us euseeffect and give out function inside that so that it only data changes and hook re renders when change soccur
    
    if(isLoading){
@@ -19,8 +22,15 @@ export default function Meals(){
         return <Error title="failed to fetch meals" message={error}/>
     }
 
-    return (<ul id="meals">
-        {loadedMeals.map((meal)=> (<MealItem key={meal.id} meal={meal}/>))}
-    </ul>
-    );
-}
+    return (
+        <div>
+          <ul id="meals">
+            {loadedMeals
+              .filter((meal) => !selectedCategory || meal.category === selectedCategory)
+              .map((meal) => (
+                <MealItem key={meal.id} meal={meal} />
+              ))}
+          </ul>
+        </div>
+      );
+    }
