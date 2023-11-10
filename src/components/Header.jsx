@@ -18,7 +18,7 @@ export default function Header({setSelectedCategory}){
   }
    
   function handleCategorySelect(category){
-    setSelectedCategory(category);
+    setSelectedCategory(category); 
   }
   // const handleFoodSelection = (event)=>{
   //   setSelectedFood(event.target.value);
