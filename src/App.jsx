@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import Cart from "./components/Cart.jsx";
 import Header from "./components/Header";
@@ -7,16 +8,21 @@ import { CartContextProvider } from "./store/CartContex.jsx";
 import { UserProgressContextProvider } from "./store/UserProgressContext.jsx";
 
 function App() {
-  const[selectedCataegory,setSelectedCategory ] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [priceFilter, setPriceFilter] = useState(''); // Add this line
+
   return (
-<UserProgressContextProvider>
-    <CartContextProvider>
-      <Header setSelectedCategory={setSelectedCategory}/>
-       <Meals selectedCategory={selectedCataegory}/>
-       <Cart/>
-       <CheckOut/>
-    </CartContextProvider>
-</UserProgressContextProvider>
+    <UserProgressContextProvider>
+      <CartContextProvider>
+        <Header
+          setSelectedCategory={setSelectedCategory}
+          setPriceFilter={setPriceFilter} // Pass the setPriceFilter function
+        />
+        <Meals selectedCategory={selectedCategory} priceFilter={priceFilter} />
+        <Cart />
+        <CheckOut />
+      </CartContextProvider>
+    </UserProgressContextProvider>
   );
 }
 
