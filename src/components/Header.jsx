@@ -91,7 +91,7 @@ export default function Header({ setSelectedCategory, setPriceFilter }) {
             ))}
           </select>
 
-          <label htmlFor="price">Sort by Price: </label>
+          <label className="filter-buttons"htmlFor="price">Sort by Price: </label>
           <select id="price" onChange={(e) => setPriceFilter(e.target.value)}>
             <option value="lowToHigh">Low to High</option>
             <option value="highToLow">High to Low</option>

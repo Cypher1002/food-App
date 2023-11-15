@@ -76,6 +76,22 @@ h1 {
   justify-content: space-between;
 }
 
+.filter-buttons {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  margin-bottom: 20px; /* Adjust margin as needed */
+  gap: 20px; /* Adjust gap between elements */
+}
+
+.filter-buttons label,
+.filter-buttons select {
+  margin-right: 20px; /* Adjust margin between label and select */
+}
+
+.filter-buttons-rating {
+  margin-left: auto; /* Push the rating filter to the right */
+}
+
 .meal-item img {
   width: 100%;
   height: 20rem;
