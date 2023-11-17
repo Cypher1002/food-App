@@ -161,6 +161,91 @@
 //   );
 // }
 
+// import { useState, useEffect } from 'react';
+// import useHttp from '../hooks/useHttp';
+// import Error from './Error.jsx';
+// import MealItem from './MeaItem';
+
+// const requestConfig = {};
+
+// export default function Meals({ selectedCategory, priceFilter }) {
+//   const { data: loadedMeals, isLoading, error } = useHttp(
+//     'http://localhost:3000/meals',
+//     requestConfig,
+//     []
+//   );
+//   const [sortedMeals, setSortedMeals] = useState([]);
+//   const [ratingFilter, setRatingFilter] = useState(null);
+
+//   useEffect(() => {
+//     const filterAndSortMeals = () => {
+//       const filteredMeals = [];
+
+//       for (const meal of loadedMeals) {
+//         const categoryMatches =
+//           !selectedCategory ||
+//           meal.category.toLowerCase() === selectedCategory.toLowerCase();
+
+//         const ratingMatches = !ratingFilter || meal.rating === ratingFilter;
+
+//         if (categoryMatches && ratingMatches) {
+//           // Insert into filtered array
+//           insertIntoSortedArray(filteredMeals, meal, priceFilter);
+//         }
+//       }
+
+//       setSortedMeals(filteredMeals);
+//     };
+
+//     filterAndSortMeals();
+//   }, [selectedCategory, priceFilter, ratingFilter, loadedMeals]);
+
+//   const insertIntoSortedArray = (array, newElement, order) => {
+//     let i = array.length - 1;
+
+//     if (!order || order === 'lowToHigh') {
+//       while (i >= 0 && newElement.price < array[i].price) {
+//         i--;
+//       }
+//     } else {
+//       while (i >= 0 && newElement.price > array[i].price) {
+//         i--;
+//       }
+//     }
+
+//     array.splice(i + 1, 0, newElement);
+//   };
+
+//   if (isLoading) {
+//     return <p className="center">Fetching Meals...</p>;
+//   }
+
+//   if (error) {
+//     return <Error title="Failed to fetch meals" message={error} />;
+//   }
+
+//   return (
+//     <div>
+//       <div className="filter-buttons-rating">
+//         <label htmlFor="rating">Filter by Rating: </label>
+//         <select id="rating" onChange={(e) => setRatingFilter(Number(e.target.value))}>
+//           <option value="">All Ratings</option>
+//           <option value={1}>1 Star</option>
+//           <option value={2}>2 Stars</option>
+//           <option value={3}>3 Stars</option>
+//           <option value={4}>4 Stars</option>
+//           <option value={5}>5 Stars</option>
+//         </select>
+//       </div>
+//       <ul id="meals">
+//         {sortedMeals.map((meal) => (
+//           <MealItem key={meal.id} meal={meal} />
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// }
+
 import { useState, useEffect } from 'react';
 import useHttp from '../hooks/useHttp';
 import Error from './Error.jsx';
@@ -179,52 +264,31 @@ export default function Meals({ selectedCategory, priceFilter }) {
 
   useEffect(() => {
     const filterAndSortMeals = () => {
-      const filteredMeals = [];
-      
-      for (const meal of loadedMeals) {
+      let filteredAndSortedMeals = loadedMeals;
+
+      // Filter by category and rating
+      filteredAndSortedMeals = loadedMeals.filter((meal) => {
         const categoryMatches =
           !selectedCategory ||
           meal.category.toLowerCase() === selectedCategory.toLowerCase();
 
         const ratingMatches = !ratingFilter || meal.rating === ratingFilter;
 
-        if (categoryMatches && ratingMatches) {
-          // Insert into filtered array
-          let i = 0;
-          while (i < filteredMeals.length && meal.price > filteredMeals[i].price) {
-            i++;
-          }
-          filteredMeals.splice(i, 0, meal);
-        }
+        return categoryMatches && ratingMatches;
+      });
+
+      // Sort by price
+      if (priceFilter === 'lowToHigh') {
+        filteredAndSortedMeals.sort((a, b) => a.price - b.price);
+      } else if (priceFilter === 'highToLow') {
+        filteredAndSortedMeals.sort((a, b) => b.price - a.price);
       }
 
-      const sorted = sortMeals(filteredMeals, priceFilter);
-      setSortedMeals(sorted);
+      setSortedMeals(filteredAndSortedMeals);
     };
 
     filterAndSortMeals();
   }, [selectedCategory, priceFilter, ratingFilter, loadedMeals]);
-
-  const sortMeals = (meals, order) => {
-    return meals.reduce((sorted, meal) => {
-      if (!order || order === 'lowToHigh') {
-        // Insert into sorted array in ascending order
-        let i = 0;
-        while (i < sorted.length && meal.price > sorted[i].price) {
-          i++;
-        }
-        sorted.splice(i, 0, meal);
-      } else {
-        // Insert into sorted array in descending order
-        let i = 0;
-        while (i < sorted.length && meal.price < sorted[i].price) {
-          i++;
-        }
-        sorted.splice(i, 0, meal);
-      }
-      return sorted;
-    }, []);
-  };
 
   if (isLoading) {
     return <p className="center">Fetching Meals...</p>;
@@ -236,7 +300,7 @@ export default function Meals({ selectedCategory, priceFilter }) {
 
   return (
     <div>
-      <div className="filter-buttons-rating">
+      <div className="filter-buttons">
         <label htmlFor="rating">Filter by Rating: </label>
         <select id="rating" onChange={(e) => setRatingFilter(Number(e.target.value))}>
           <option value="">All Ratings</option>
