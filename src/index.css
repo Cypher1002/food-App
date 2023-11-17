@@ -76,20 +76,22 @@ h1 {
   justify-content: space-between;
 }
 
-.filter-buttons {
+
+.header .filter-buttons {
   display: flex;
-  align-items: center; /* Align items vertically in the center */
-  margin-bottom: 20px; /* Adjust margin as needed */
-  gap: 20px; /* Adjust gap between elements */
+  align-items: center;
+  margin-bottom: 10px; /* Adjust margin as needed */
 }
 
-.filter-buttons label,
-.filter-buttons select {
+.header .filter-buttons label,
+.header .filter-buttons select,
+.meals .filter-buttons label,
+.meals .filter-buttons select {
   margin-right: 20px; /* Adjust margin between label and select */
 }
 
-.filter-buttons-rating {
-  margin-left: auto; /* Push the rating filter to the right */
+.meals .filter-buttons{
+  margin-left: 70%;
 }
 
 .meal-item img {

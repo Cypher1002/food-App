@@ -14,11 +14,17 @@ function App() {
   return (
     <UserProgressContextProvider>
       <CartContextProvider>
+        <div className="header">
         <Header
           setSelectedCategory={setSelectedCategory}
           setPriceFilter={setPriceFilter} // Pass the setPriceFilter function
         />
+        </div>
+
+        <div className="meals">
         <Meals selectedCategory={selectedCategory} priceFilter={priceFilter} />
+
+        </div>
         <Cart />
         <CheckOut />
       </CartContextProvider>
